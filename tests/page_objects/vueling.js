@@ -1,24 +1,33 @@
-var vuelingCommands = {
-  selectNextWeek: function() {
-    var nextWeekDate = nextweek();
-    var month = 1;
-    var dayOfWeek = nextWeekDate.getDate();
+var moment = require("moment");
 
-    if (!isSameMonth(nextWeekDate)) {
-      month = 2;
-    }
+var vuelingCommands = {
+  nextWeekXpathSelector: function() {
+    var now = moment();
+    var nextWeekDate = this.getNextWeek(now);
+    var month = this.isSameMonth(now, nextWeekDate) ? 1 : 2;
+    var dayOfMonth = nextWeekDate.date();
     var xPathSelector =
-      "//div[@id='ui-datepicker-div']" +
+      "//div[contains(@class, 'searchbar-datepicker')]" +
       "//td[@data-month='" +
       month +
       "']" +
       "//a[contains(@class, 'ui-state-default') and text()='" +
-      dayOfWeek +
+      dayOfMonth +
       "']";
 
     return xPathSelector;
+  },
+  getNextWeek: function(date) {
+    return date.add(7, "days");
+  },
+  getNextWeekFormated: function() {
+    return this.getNextWeek(moment()).format('DD/MM/YYYY');
+  },
+  isSameMonth(dateA, dateB) {
+    return moment(dateA).isSame(dateB, 'month'); 
   }
 };
+
 
 module.exports = {
   url: "https://www.vueling.com/es",
@@ -34,7 +43,7 @@ module.exports = {
       selector: "#passengers-input"
     },
     dateRangeInput: {
-      selector: ".date-range input"
+      selector: ".searchbar-datepicker"
     },
     searchSubmit: {
       selector: "#btnSubmitHomeSearcher"
@@ -44,21 +53,10 @@ module.exports = {
     },
     citiesDestinationSugestion: {
       selector: "#destinationInput-sugestion-popup"
+    },
+    resultsElement: {
+      selector: "#research"
     }
   }
 };
 
-function nextweek() {
-  var today = new Date();
-  var nextweek = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate() + 7
-  );
-  return nextweek;
-}
-
-function isSameMonth(nextWeekDate) {
-  const now = new Date();
-  return now.getMonth() === nextWeekDate.getMonth();
-}
