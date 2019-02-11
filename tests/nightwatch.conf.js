@@ -2,6 +2,8 @@
 var seleniumServer = require("selenium-server");
 var chromedriver = require("chromedriver");
 var geckodriver = require("geckodriver");
+var SCREENSHOT_PATH = "./reports/screenshots/";
+var timestamp = (Math.floor(Date.now() / 1000));
 
 var config = {
   src_folders: [
@@ -9,7 +11,8 @@ var config = {
     "tests/features"
   ],
   page_objects_path: "tests/page_objects",
-  output_folder: "reports", // Where to output the test reports
+  report_prefix: timestamp,
+  output_folder: "reports/" + timestamp, // Where to output the test reports
   selenium: {
     // Information for selenium, such as the location of the drivers ect.
     start_process: true,
@@ -28,7 +31,8 @@ var config = {
   test_settings: {
     default: {
       screenshots: {
-        enabled: false
+        enabled: true,
+        "path": SCREENSHOT_PATH 
       },
       globals: {
         // How long to wait (in milliseconds) before the test times out

@@ -3,6 +3,7 @@ module.exports = {
     var vueling = browser.page.vueling();
     var nextWeekXpath = vueling.nextWeekXpathSelector();
     var nextWeekDateExpected = vueling.getNextWeekFormated();
+    var output_folder = browser.options.output_folder;
     
     vueling
       .navigate()
@@ -17,14 +18,15 @@ module.exports = {
       )
       .waitForElementVisible("@dateRangeInput")
       .click(nextWeekXpath)
+      .saveScreenshot(output_folder + "/vueling-form.png")
       .click("@searchSubmit")
       .waitForElementVisible("@resultsElement")
       .useCss()
       .assert.containsText('#research h3.floatLeft', 'Tu búsqueda:')
       .assert.containsText('#research .details > p strong', 'Alicante (ALC) - Almería (LEI)')
       .assert.containsText('#research .details #outboundDate', nextWeekDateExpected)
-      
-      
+      .saveScreenshot(output_folder + "/vueling-results.png")
+
     browser.end();
   }
 };
